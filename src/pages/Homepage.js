@@ -1,26 +1,73 @@
-import { Title } from "../styled"
-import { Link } from "react-router-dom"
-import { LinkWord } from "../styled"
-import styled from "styled-components"
+import { Title } from "../styled";
+import { Link } from "react-router-dom";
+import { LinkWord } from "../styled";
+import styled from "styled-components";
+import {
+  fetchCurrentWeather,
+  fetchResolvedLocation,
+} from "../store/weather/thunks";
+import { useDispatch, useSelector } from "react-redux";
+import { selectCurrentConditions } from "../store/weather/selectors";
+import { useEffect, useState } from "react";
+import { currentLocation } from "../store/weather/slice";
+import { CurrentWeather } from "../components/CurrentWeather";
+import { WeatherDetails } from "../components/WeatherDetails";
+import { HourlyForecast } from "../components/HourlyForecast";
 
 export const Homepage = () => {
+  // const dispatch = useDispatch();
+  // const currentWeather = useSelector(selectCurrentConditions);
+
+  // // useEffect(() => {
+  // //   console.log(
+  // //     currentConditions,
+  // //     "THIS IS THE CURRENT LOCATION INSIDE THE PAGE"
+  // //   );
+  // // }, [currentConditions]);
+
+  // const [lat, setLat] = useState(null);
+  // const [lng, setLng] = useState(null);
+  // const [status, setStatus] = useState(null);
+
+  // const getLocation = () => {
+  //   if (!navigator.geolocation) {
+  //     setStatus("Geolocation is not supported by your browser");
+  //   } else {
+  //     setStatus("Locating...");
+  //     navigator.geolocation.getCurrentPosition(
+  //       (position) => {
+  //         setStatus(null);
+  //         setLat(position.coords.latitude);
+  //         setLng(position.coords.longitude);
+  //       },
+  //       () => {
+  //         setStatus("Unable to retrieve your location");
+  //       }
+  //     );
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   // dispatch(currentLocation(lat, lng));
+  //   getLocation();
+  // }, [dispatch]);
+
+  // useEffect(() => {
+  //   if (lat) {
+  //     dispatch(fetchCurrentWeather(lat, lng));
+  //     dispatch(fetchResolvedLocation(lat, lng));
+  //   }
+  // }, [lat]);
 
   return (
     <Container>
-     <h3>Hello there 👋</h3>
-     <p>General information:</p>
-     <ul>
-      <li>Go to your backend and modify the config url</li>
-      <li>Make sure you clicked on the <b>use template</b> button on github</li>
-      <li>This template is using <a style={LinkWord} target="_blank" href="https://styled-components.com/">styled components</a>, you don't have to use it</li>
-      <li>You don't have to follow the folder structure, feel free to adapt to your own</li>
-      <li>Login and SignUp are already implemented</li>
-      <li>Modify this page to create your own homeepage</li>
-     </ul>
+      <CurrentWeather />
+      <WeatherDetails />
+      <HourlyForecast />
     </Container>
-  )
-}
+  );
+};
 
 const Container = styled.div`
-  margin: 20px
-`
+  margin: 20px;
+`;
