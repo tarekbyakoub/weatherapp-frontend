@@ -13,57 +13,48 @@ import { currentLocation } from "../store/weather/slice";
 import { CurrentWeather } from "../components/CurrentWeather";
 import { WeatherDetails } from "../components/WeatherDetails";
 import { HourlyForecast } from "../components/HourlyForecast";
+import { DailyForecast } from "../components/DailyForecast";
 
 export const Homepage = () => {
-  // const dispatch = useDispatch();
-  // const currentWeather = useSelector(selectCurrentConditions);
+  const dispatch = useDispatch();
+  const [lat, setLat] = useState(null);
+  const [lng, setLng] = useState(null);
+  const [status, setStatus] = useState(null);
 
-  // // useEffect(() => {
-  // //   console.log(
-  // //     currentConditions,
-  // //     "THIS IS THE CURRENT LOCATION INSIDE THE PAGE"
-  // //   );
-  // // }, [currentConditions]);
+  const getLocation = () => {
+    if (!navigator.geolocation) {
+      setStatus("Geolocation is not supported by your browser");
+    } else {
+      setStatus("Locating...");
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setStatus(null);
+          setLat(position.coords.latitude);
+          setLng(position.coords.longitude);
+        },
+        () => {
+          setStatus("Unable to retrieve your location");
+        }
+      );
+    }
+  };
 
-  // const [lat, setLat] = useState(null);
-  // const [lng, setLng] = useState(null);
-  // const [status, setStatus] = useState(null);
+  useEffect(() => {
+    // dispatch(currentLocation(lat, lng));
+    getLocation();
+  }, [dispatch]);
 
-  // const getLocation = () => {
-  //   if (!navigator.geolocation) {
-  //     setStatus("Geolocation is not supported by your browser");
-  //   } else {
-  //     setStatus("Locating...");
-  //     navigator.geolocation.getCurrentPosition(
-  //       (position) => {
-  //         setStatus(null);
-  //         setLat(position.coords.latitude);
-  //         setLng(position.coords.longitude);
-  //       },
-  //       () => {
-  //         setStatus("Unable to retrieve your location");
-  //       }
-  //     );
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   // dispatch(currentLocation(lat, lng));
-  //   getLocation();
-  // }, [dispatch]);
-
-  // useEffect(() => {
-  //   if (lat) {
-  //     dispatch(fetchCurrentWeather(lat, lng));
-  //     dispatch(fetchResolvedLocation(lat, lng));
-  //   }
-  // }, [lat]);
-
+  useEffect(() => {
+    if (lat) {
+      dispatch(fetchResolvedLocation(lat, lng));
+    }
+  }, [lat]);
   return (
     <Container>
       <CurrentWeather />
       <WeatherDetails />
       <HourlyForecast />
+      <DailyForecast />
     </Container>
   );
 };

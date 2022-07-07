@@ -1,21 +1,18 @@
-//TODO make a card that will display current weather data
-
 import {
   fetchResolvedLocation,
-  fetchHourlyForecast,
+  fetchDailyForecast,
 } from "../../store/weather/thunks";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectCurrentLocation,
-  selectHourlyForecast,
+  selectDailyForecast,
 } from "../../store/weather/selectors";
 import { useEffect, useState } from "react";
 
-const HourlyForecast = () => {
+const DailyForecast = () => {
   const dispatch = useDispatch();
-  const hourlyForecast = useSelector(selectHourlyForecast);
-  console.log("Hourly forecast component", hourlyForecast);
-  const currentLocation = useSelector(selectCurrentLocation);
+  const dailyForecast = useSelector(selectDailyForecast);
+  console.log("Daily forecast component", dailyForecast);
 
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
@@ -46,30 +43,27 @@ const HourlyForecast = () => {
 
   useEffect(() => {
     if (lat) {
-      dispatch(fetchHourlyForecast(lat, lng));
+      dispatch(fetchDailyForecast(lat, lng));
       dispatch(fetchResolvedLocation(lat, lng));
     }
   }, [lat]);
 
-  //   if (!currentLocation) return <p>Loading...</p>;
-
   return (
     <div class="rounded-xl box-border w-3/4 p-4 border-4">
       <div>
-        {!hourlyForecast.length ? (
+        {!dailyForecast.length ? (
           <div>Loading...</div>
         ) : (
           <div class="flex flex-row text-xl overflow-x-scroll">
-            {hourlyForecast[0].hours.map((hour) => {
+            {dailyForecast.map((day) => {
               return (
                 <div class="p-3">
                   <img
-                    src={`https://raw.githubusercontent.com/visualcrossing/WeatherIcons/73c8cc581d8d35076b47047088f3bc91cb1dd675/SVG/1st%20Set%20-%20Color/${hour.icon}.svg`}
+                    src={`https://raw.githubusercontent.com/visualcrossing/WeatherIcons/73c8cc581d8d35076b47047088f3bc91cb1dd675/SVG/1st%20Set%20-%20Color/${day.icon}.svg`}
                     width="80px"
                     class=""
                   />
-                  <p class="p-1">{parseInt(hour.temp)}°</p>
-                  <p>{parseInt(hour.datetime)}h</p>
+                  <p class="p-1">{parseInt(day.temp)}°</p>
                 </div>
               );
             })}
@@ -80,4 +74,4 @@ const HourlyForecast = () => {
   );
 };
 
-export { HourlyForecast };
+export { DailyForecast };

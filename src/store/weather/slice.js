@@ -23,10 +23,18 @@ export const weatherSlice = createSlice({
       console.log("hourlyForecastFetched action", action);
       state.hourlyForecast = [...action.payload];
     },
+    dailyForecastFetched: (state, action) => {
+      console.log("dailyForecastFetched action", action);
+      state.dailyForecast = [...action.payload];
+    },
   },
 });
 
-export const { currentWeatherFetched, currentLocation, hourlyForecastFetched } =
-  weatherSlice.actions;
+export const {
+  currentWeatherFetched,
+  currentLocation,
+  hourlyForecastFetched,
+  dailyForecastFetched,
+} = weatherSlice.actions;
 
 export default weatherSlice.reducer;

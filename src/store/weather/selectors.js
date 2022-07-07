@@ -4,3 +4,5 @@ export const selectCurrentLocation = (reduxState) =>
   reduxState.weather.currentLocation;
 export const selectHourlyForecast = (reduxState) =>
   reduxState.weather.hourlyForecast;
+export const selectDailyForecast = (reduxState) =>
+  reduxState.weather.dailyForecast;

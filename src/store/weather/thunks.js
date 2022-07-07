@@ -12,6 +12,7 @@ import {
   currentWeatherFetched,
   currentLocation,
   hourlyForecastFetched,
+  dailyForecastFetched,
 } from "./slice";
 
 export const fetchCurrentWeather = (lat, lng) => async (dispatch, getState) => {
@@ -67,6 +68,27 @@ export const fetchHourlyForecast = (lat, lng) => async (dispatch, getState) => {
     const hourlyForecast = response.data.days;
     console.log("hourly weather", hourlyForecast);
     dispatch(hourlyForecastFetched(hourlyForecast));
+  } catch (e) {
+    console.log(e.message);
+  }
+};
+
+export const fetchDailyForecast = (lat, lng) => async (dispatch, getState) => {
+  try {
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, "0");
+    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = `${yyyy}-${mm}-${dd}`;
+    // lat , lng
+    console.log("hello is this running?");
+    const query = `${weatherApiUrl}/${lat},${lng}?iconSet=icons1&unitGroup=metric&include=days&key=${weatherApiKey}`;
+    console.log("api query", query);
+    const response = await axios.get(query);
+    const dailyForecast = response.data.days;
+    console.log("daily weather", dailyForecast);
+    dispatch(dailyForecastFetched(dailyForecast));
   } catch (e) {
     console.log(e.message);
   }
