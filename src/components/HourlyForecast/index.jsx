@@ -3,6 +3,7 @@
 import {
   fetchResolvedLocation,
   fetchHourlyForecast,
+  hourlyForecastByLocation,
 } from "../../store/weather/thunks";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -10,51 +11,31 @@ import {
   selectHourlyForecast,
 } from "../../store/weather/selectors";
 import { useEffect, useState } from "react";
+// import moment from "moment";
 
-const HourlyForecast = () => {
+const HourlyForecast = (props) => {
   const dispatch = useDispatch();
   const hourlyForecast = useSelector(selectHourlyForecast);
   console.log("Hourly forecast component", hourlyForecast);
   const currentLocation = useSelector(selectCurrentLocation);
+  const lat = props.lat;
+  const lng = props.lng;
 
-  const [lat, setLat] = useState(null);
-  const [lng, setLng] = useState(null);
-  const [status, setStatus] = useState(null);
-
-  const getLocation = () => {
-    if (!navigator.geolocation) {
-      setStatus("Geolocation is not supported by your browser");
-    } else {
-      setStatus("Locating...");
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setStatus(null);
-          setLat(position.coords.latitude);
-          setLng(position.coords.longitude);
-        },
-        () => {
-          setStatus("Unable to retrieve your location");
-        }
-      );
-    }
-  };
+  const location = props.location;
 
   useEffect(() => {
-    // dispatch(currentLocation(lat, lng));
-    getLocation();
-  }, [dispatch]);
-
-  useEffect(() => {
+    console.log(props.location, "this is the component hourly ");
+    if (location) dispatch(hourlyForecastByLocation(location));
     if (lat) {
       dispatch(fetchHourlyForecast(lat, lng));
       dispatch(fetchResolvedLocation(lat, lng));
     }
-  }, [lat]);
+  }, [dispatch, location, lat]);
 
   //   if (!currentLocation) return <p>Loading...</p>;
 
   return (
-    <div class="rounded-xl box-border w-3/4 p-4 border-4">
+    <div class="rounded-xl box-content w-3/4 p-4 border-2 drop-shadow-lg">
       <div>
         {!hourlyForecast.length ? (
           <div>Loading...</div>
@@ -62,14 +43,16 @@ const HourlyForecast = () => {
           <div class="flex flex-row text-xl overflow-x-scroll">
             {hourlyForecast[0].hours.map((hour) => {
               return (
-                <div class="p-3">
+                <div class="flex flex-col justify-between p-3">
                   <img
                     src={`https://raw.githubusercontent.com/visualcrossing/WeatherIcons/73c8cc581d8d35076b47047088f3bc91cb1dd675/SVG/1st%20Set%20-%20Color/${hour.icon}.svg`}
                     width="80px"
                     class=""
                   />
-                  <p class="p-1">{parseInt(hour.temp)}°</p>
-                  <p>{parseInt(hour.datetime)}h</p>
+                  <div class="text-center">
+                    <p class="p-1">{parseInt(hour.temp)}°</p>
+                    <p>{parseInt(hour.datetime)}h</p>
+                  </div>
                 </div>
               );
             })}

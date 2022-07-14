@@ -12,44 +12,13 @@ import {
 import { useEffect, useState } from "react";
 import { currentLocation } from "../../store/weather/slice";
 
-const WeatherDetails = () => {
+const WeatherDetails = (props) => {
   const dispatch = useDispatch();
   const currentWeather = useSelector(selectCurrentConditions);
   const currentLocation = useSelector(selectCurrentLocation);
-
-  // useEffect(() => {
-  //   console.log(
-  //     currentConditions,
-  //     "THIS IS THE CURRENT LOCATION INSIDE THE PAGE"
-  //   );
-  // }, [currentConditions]);
-
-  const [lat, setLat] = useState(null);
-  const [lng, setLng] = useState(null);
-  const [status, setStatus] = useState(null);
-
-  const getLocation = () => {
-    if (!navigator.geolocation) {
-      setStatus("Geolocation is not supported by your browser");
-    } else {
-      setStatus("Locating...");
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setStatus(null);
-          setLat(position.coords.latitude);
-          setLng(position.coords.longitude);
-        },
-        () => {
-          setStatus("Unable to retrieve your location");
-        }
-      );
-    }
-  };
-
-  useEffect(() => {
-    // dispatch(currentLocation(lat, lng));
-    getLocation();
-  }, [dispatch]);
+  const lat = props.lat;
+  const lng = props.lng;
+  const location = props.location;
 
   useEffect(() => {
     if (lat) {
@@ -61,7 +30,7 @@ const WeatherDetails = () => {
   //   if (!currentLocation) return <p>Loading...</p>;
 
   return (
-    <div class="flex flex-row justify-between rounded-xl box-border w-1/4 p-4 border-4 my-4">
+    <div class="flex flex-row justify-between rounded-xl box-border p-4 border-2 my-4 box-shadow-lg shadow-black">
       <div>
         {currentWeather && currentWeather.currentConditions && (
           <ul>

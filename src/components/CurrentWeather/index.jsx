@@ -3,6 +3,8 @@
 import {
   fetchCurrentWeather,
   fetchResolvedLocation,
+  fetchWeatherByLocation,
+  searchForLocation,
 } from "../../store/weather/thunks";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -12,67 +14,47 @@ import {
 import { useEffect, useState } from "react";
 import { currentLocation } from "../../store/weather/slice";
 
-const CurrentWeather = () => {
+const CurrentWeather = (props) => {
   const dispatch = useDispatch();
   const currentWeather = useSelector(selectCurrentConditions);
   const currentLocation = useSelector(selectCurrentLocation);
+  const lat = props.lat;
+  const lng = props.lng;
+  const location = props.location;
 
-  // useEffect(() => {
-  //   console.log(
-  //     currentConditions,
-  //     "THIS IS THE CURRENT LOCATION INSIDE THE PAGE"
-  //   );
-  // }, [currentConditions]);
-
-  const [lat, setLat] = useState(null);
-  const [lng, setLng] = useState(null);
-  const [status, setStatus] = useState(null);
-
-  const getLocation = () => {
-    if (!navigator.geolocation) {
-      setStatus("Geolocation is not supported by your browser");
+  useEffect(() => {
+    if (location) {
+      // console.log("This is the location received", location);
+      dispatch(fetchWeatherByLocation(location));
     } else {
-      setStatus("Locating...");
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setStatus(null);
-          setLat(position.coords.latitude);
-          setLng(position.coords.longitude);
-        },
-        () => {
-          setStatus("Unable to retrieve your location");
-        }
-      );
+      if (lat) {
+        dispatch(fetchCurrentWeather(lat, lng));
+        dispatch(fetchResolvedLocation(lat, lng));
+      }
     }
-  };
-
-  useEffect(() => {
-    // dispatch(currentLocation(lat, lng));
-    getLocation();
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (lat) {
-      dispatch(fetchCurrentWeather(lat, lng));
-      dispatch(fetchResolvedLocation(lat, lng));
-    }
-  }, [lat]);
+  }, [dispatch, lng, lat, location]);
 
   //   if (!currentLocation) return <p>Loading...</p>;
 
+  // const displayName = currentLocation.resolvedAddress.split(",");
+
   return (
-    <div class="rounded-xl box-border w-1/4 p-4 border-4">
-      <div>
-        {!currentLocation.length ? (
-          <div>Locating...</div>
-        ) : (
-          <div class="text-2xl p-1">
-            {currentLocation.map((location) => {
-              return location.properties.city;
-            })}
-          </div>
-        )}
-      </div>
+    <div class="rounded-xl box-border p-4 my-3 border-2 box-shadow-lg">
+      {!location ? (
+        <div>
+          {!currentLocation.length ? (
+            <div>Locating...</div>
+          ) : (
+            <div class="text-2xl p-1">
+              {currentLocation.map((location) => {
+                return location.properties.city;
+              })}
+            </div>
+          )}
+        </div>
+      ) : (
+        <div>{currentWeather.resolvedAddress.split(",")[0]}</div>
+      )}
       <div>
         {currentWeather && currentWeather.currentConditions && (
           <div>

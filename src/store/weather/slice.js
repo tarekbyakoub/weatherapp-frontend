@@ -5,6 +5,8 @@ const initialState = {
   hourlyForecast: [],
   dailyForecast: [],
   currentLocation: {},
+  airQuality: [],
+  searchedLocation: null,
 };
 
 export const weatherSlice = createSlice({
@@ -12,20 +14,26 @@ export const weatherSlice = createSlice({
   initialState,
   reducers: {
     currentWeatherFetched: (state, action) => {
-      console.log("currentWeatherFetched action", action);
+      console.log(action.payload, "here");
       state.currentWeather = { ...action.payload };
     },
     currentLocation: (state, action) => {
-      console.log(action, "This is the location, x, y");
       state.currentLocation = [...action.payload];
     },
     hourlyForecastFetched: (state, action) => {
-      console.log("hourlyForecastFetched action", action);
+      console.log(action.payload, "this is hourly");
       state.hourlyForecast = [...action.payload];
     },
     dailyForecastFetched: (state, action) => {
-      console.log("dailyForecastFetched action", action);
+      console.log(action.payload, "this is daily");
       state.dailyForecast = [...action.payload];
+    },
+    airQualityFetched: (state, action) => {
+      state.airQuality = [...action.payload];
+    },
+    searchLocation: (state, action) => {
+      console.log("search location", action);
+      state.searchedLocation = { ...action.payload };
     },
   },
 });
@@ -35,6 +43,8 @@ export const {
   currentLocation,
   hourlyForecastFetched,
   dailyForecastFetched,
+  airQualityFetched,
+  searchLocation,
 } = weatherSlice.actions;
 
 export default weatherSlice.reducer;
