@@ -8,10 +8,10 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { selectCurrentConditions } from "../../store/weather/selectors";
 import { useEffect, useState } from "react";
-import { VictoryAnimation, VictoryLabel, VictoryPie } from "victory";
 import { SliderBar } from "../SliderBar";
+import { RainChanceBar } from "../RainChanceBar";
 
-const UVIndex = (props) => {
+const RainChance = (props) => {
   const dispatch = useDispatch();
   const currentWeather = useSelector(selectCurrentConditions);
   const lat = props.lat;
@@ -28,41 +28,26 @@ const UVIndex = (props) => {
     }
   }, [lat]);
 
-  const indexDescription = {
-    0: "Low",
-    1: "Low",
-    2: "Low",
-    3: "Moderate",
-    4: "Moderate",
-    5: "Moderate",
-    6: "High",
-    7: "High",
-    8: "Very High",
-    9: "Very High",
-    10: "Very High",
-    11: "Extreme",
-  };
-
   currentWeather &&
     currentWeather.currentConditions &&
-    console.log("UV INDEX", currentWeather.uvindex);
+    console.log("RAIN CHANCE", currentWeather.currentConditions.precipprob);
   return (
-    <div class="uv">
+    <div class="rain">
       <div>
         {currentWeather && currentWeather.currentConditions && (
           <div class="p-1 text-center">
-            <div>UV Index: {currentWeather.currentConditions.uvindex}</div>
+            <div>Rain chance {currentWeather.currentConditions.precipprob}</div>
             <br />
-            <SliderBar
-              percentage={
-                currentWeather.currentConditions.uvindex
-                  ? currentWeather.currentConditions.uvindex * 9.09 - 8
-                  : 0
-              }
+            <RainChanceBar
+              percentage={currentWeather.currentConditions.precipprob}
             />
             <br />
             <div>
-              {indexDescription[currentWeather.currentConditions.uvindex]}
+              {currentWeather.currentConditions.precipprob ? (
+                <div>currentWeather.currentConditions.precipprob</div>
+              ) : (
+                <div>It will remain dry for the moment</div>
+              )}
             </div>
           </div>
         )}
@@ -71,4 +56,4 @@ const UVIndex = (props) => {
   );
 };
 
-export { UVIndex };
+export { RainChance };

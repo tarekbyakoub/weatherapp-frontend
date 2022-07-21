@@ -1,5 +1,3 @@
-//TODO make a card that will display current weather data
-
 import {
   fetchResolvedLocation,
   fetchHourlyForecast,
@@ -35,30 +33,28 @@ const HourlyForecast = (props) => {
   //   if (!currentLocation) return <p>Loading...</p>;
 
   return (
-    <div class="rounded-xl box-content w-3/4 p-4 border-2 drop-shadow-lg">
-      <div>
-        {!hourlyForecast.length ? (
-          <div>Loading...</div>
-        ) : (
-          <div class="flex flex-row text-xl overflow-x-scroll">
-            {hourlyForecast[0].hours.map((hour) => {
-              return (
-                <div class="flex flex-col justify-between p-3">
-                  <img
-                    src={`https://raw.githubusercontent.com/visualcrossing/WeatherIcons/73c8cc581d8d35076b47047088f3bc91cb1dd675/SVG/1st%20Set%20-%20Color/${hour.icon}.svg`}
-                    width="80px"
-                    class=""
-                  />
-                  <div class="text-center">
-                    <p class="p-1">{parseInt(hour.temp)}°</p>
-                    <p>{parseInt(hour.datetime)}h</p>
-                  </div>
+    <div class="hourly">
+      {!hourlyForecast.length ? (
+        <div>Loading...</div>
+      ) : (
+        <div class="hourly-row">
+          {hourlyForecast[0].hours.map((hour) => {
+            return (
+              <div class="p-3 hourly-row-item">
+                <img
+                  src={`https://raw.githubusercontent.com/visualcrossing/WeatherIcons/73c8cc581d8d35076b47047088f3bc91cb1dd675/SVG/1st%20Set%20-%20Color/${hour.icon}.svg`}
+                  width="80px"
+                  class=""
+                />
+                <div class="text-center">
+                  <p class="p-1">{parseInt(hour.temp)}°</p>
+                  <p>{parseInt(hour.datetime)}h</p>
                 </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

@@ -63,7 +63,7 @@ const AirQuality = (props) => {
   ];
 
   return (
-    <div class="flex rounded-xl box-border w-1/6 p-4 border-2 my-3 box-shadow-lg">
+    <div class="aqi">
       <div>
         {!airQuality.length ? (
           <div>Loading...</div>

@@ -29,28 +29,26 @@ const DailyForecast = (props) => {
   }, [dispatch, location, lat]);
 
   return (
-    <div class="rounded-xl box-border w-3/4 p-4 my-3 border-2 box-shadow-lg">
-      <div>
-        {!dailyForecast.length ? (
-          <div>Loading...</div>
-        ) : (
-          <div class="flex flex-row text-xl overflow-x-scroll">
-            {dailyForecast.map((day) => {
-              return (
-                <div class="flex flex-col justify-evenly p-3">
-                  <img
-                    src={`https://raw.githubusercontent.com/visualcrossing/WeatherIcons/73c8cc581d8d35076b47047088f3bc91cb1dd675/SVG/1st%20Set%20-%20Color/${day.icon}.svg`}
-                    width="80px"
-                    class=""
-                  />
-                  <p>{moment(day.datetime).format("ddd")}</p>
-                  <p class="p-1">{parseInt(day.tempmax)}°</p>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
+    <div class="daily">
+      {!dailyForecast.length ? (
+        <div>Loading...</div>
+      ) : (
+        <div class="daily-row">
+          {dailyForecast.map((day) => {
+            return (
+              <div class="p-3 daily-row-item">
+                <img
+                  src={`https://raw.githubusercontent.com/visualcrossing/WeatherIcons/73c8cc581d8d35076b47047088f3bc91cb1dd675/SVG/1st%20Set%20-%20Color/${day.icon}.svg`}
+                  width="80px"
+                  class=""
+                />
+                <p>{moment(day.datetime).format("ddd")}</p>
+                <p class="p-1">{parseInt(day.tempmax)}°</p>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

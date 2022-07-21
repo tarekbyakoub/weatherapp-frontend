@@ -13,6 +13,17 @@ import {
 } from "../../store/weather/selectors";
 import { useEffect, useState } from "react";
 import { currentLocation } from "../../store/weather/slice";
+import { addFavourite, favouritesFetched } from "../../store/user/slice";
+import {
+  addUserFavourites,
+  fetchUserFavourites,
+} from "../../store/user/thunks";
+import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import {
+  selectFavourites,
+  selectToken,
+  selectUser,
+} from "../../store/user/selectors";
 
 const CurrentWeather = (props) => {
   const dispatch = useDispatch();
@@ -21,6 +32,9 @@ const CurrentWeather = (props) => {
   const lat = props.lat;
   const lng = props.lng;
   const location = props.location;
+  const token = useSelector(selectToken);
+  const favourites = useSelector(selectFavourites);
+  const user = useSelector(selectUser);
 
   useEffect(() => {
     if (location) {
@@ -34,30 +48,74 @@ const CurrentWeather = (props) => {
     }
   }, [dispatch, lng, lat, location]);
 
+  useEffect(() => {
+    console.log("TOKEN IS", token);
+  }, [token]);
+
+  useEffect(() => {
+    if (user) {
+      dispatch(fetchUserFavourites(user.data));
+    }
+  }, [dispatch, user]);
+
+  console.log("This is the current weather object", currentWeather);
   //   if (!currentLocation) return <p>Loading...</p>;
 
   // const displayName = currentLocation.resolvedAddress.split(",");
 
+  // const currentWeatherDisplay = currentWeather.currentConditions
+  //   ? currentWeather.currentConditions
+  //   : currentWeather.days[0];
+
   return (
-    <div class="rounded-xl box-border p-4 my-3 border-2 box-shadow-lg">
+    <div class="current">
       {!location ? (
-        <div>
+        <div class="current-location">
           {!currentLocation.length ? (
-            <div>Locating...</div>
+            <div>{props.status}</div>
           ) : (
-            <div class="text-2xl p-1">
+            <div class="current-location-head">
               {currentLocation.map((location) => {
                 return location.properties.city;
               })}
+              <button
+                class="location-fav"
+                onClick={() =>
+                  dispatch(
+                    addUserFavourites(
+                      currentLocation[0]?.properties.city,
+                      currentLocation[0]?.properties.city,
+                      token
+                    )
+                  )
+                }>
+                <AiOutlineStar class="fav-button" />
+              </button>
             </div>
           )}
         </div>
       ) : (
-        <div>{currentWeather.resolvedAddress.split(",")[0]}</div>
+        <div class="current-location-head">
+          {currentWeather.resolvedAddress.split(",")[0]}{" "}
+          <button
+            class="location-fav"
+            onClick={() => {
+              dispatch(
+                addUserFavourites(
+                  currentWeather.resolvedAddress,
+                  currentWeather.resolvedAddress.split(",")[0],
+                  token
+                )
+              );
+              dispatch(fetchUserFavourites(user.data));
+            }}>
+            <AiOutlineStar class="fav-button" />
+          </button>
+        </div>
       )}
-      <div>
-        {currentWeather && currentWeather.currentConditions && (
-          <div>
+      {currentWeather && currentWeather.currentConditions ? (
+        <div class="current-details">
+          <div class="current-image">
             <h1 class="text-3xl p-1">
               {parseInt(currentWeather.currentConditions.temp)}°C
             </h1>
@@ -66,10 +124,12 @@ const CurrentWeather = (props) => {
               width="80px"
               class="p-2"
             />
-            <p>{currentWeather.description}</p>
           </div>
-        )}
-      </div>
+          <div class="current-description">{currentWeather.description}</div>
+        </div>
+      ) : (
+        <div>Data not available right now</div>
+      )}
     </div>
   );
 };

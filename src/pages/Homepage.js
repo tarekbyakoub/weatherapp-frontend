@@ -15,21 +15,36 @@ import { UVIndex } from "../components/UVIndex";
 import { FilledInput, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { dispatch } from "d3";
-import { currentLocation, searchLocation } from "../store/weather/slice";
+import {
+  currentLocation,
+  currentWeatherFetched,
+  searchLocation,
+} from "../store/weather/slice";
 import { fetchWeatherByLocation } from "../store/weather/thunks";
 import { SuggestionBox } from "../components/SuggestionBox";
-import { selectDailyForecast } from "../store/weather/selectors";
+import {
+  selectAirQuality,
+  selectCurrentConditions,
+  selectDailyForecast,
+  selectSearchedLocation,
+} from "../store/weather/selectors";
 import { useSelector } from "react-redux";
+import { SideBar } from "../components/SideBar";
+import "../App.css";
+import { RainChance } from "../components/RainChance";
 
 export const Homepage = () => {
-  const [location, setLocation] = useState("");
+  const location = useSelector(selectSearchedLocation);
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
   const [status, setStatus] = useState(null);
-  const [suggestions, setSuggestions] = useState([]);
-  const [searchText, setSearchText] = useState("");
+  // const favLocation = useSelector(selectFavLocation)
 
   const dailyForecast = useSelector(selectDailyForecast);
+  const airQuality = useSelector(selectAirQuality);
+  const currentWeather = useSelector(selectCurrentConditions);
+
+  console.log("Current Weather Homepage", currentWeather);
 
   const getLocation = () => {
     if (!navigator.geolocation) {
@@ -54,104 +69,77 @@ export const Homepage = () => {
     getLocation();
   }, []);
 
-  useEffect(() => {
-    console.log(location, "location changed");
-  }, [location]);
+  // useEffect(() => {
+  //   console.log(location, "location changed");
+  // }, [location]);
 
-  const submit = (event) => {
-    // to make sure that the form does not redirect (which is normal browser behavior)
-    event.preventDefault();
-    console.log("search location", location);
-    dispatch(searchLocation(location));
+  console.log("dailyForecast homepage", dailyForecast[0]);
+
+  // if (
+  //   currentWeather &&
+  //   currentWeather.currentConditions &&
+  //   currentWeather.currentConditions.cloudcover < 30
+  // )
+
+  // const backgroundClass =
+
+  const backgrounds2 = {
+    clear: { backgroundColor: "black", backgroundImage: "sjdadak" },
+    rainy: "grey",
+    storm: "black",
   };
 
-  const resolvedAddress = async (location) => {
-    try {
-      console.log("location to search", location);
-      const response = await axios.get(
-        `https://api.geoapify.com/v1/geocode/autocomplete?text=${location}&apiKey=${geoCodeApiKey}`
-      );
-      const suggestions = response.data.features.map((f) => ({
-        city: f.properties.city,
-        country: f.properties.country,
-      }));
-      if (location) setSuggestions(suggestions);
-      console.log("autocomplete", suggestions);
-    } catch (e) {
-      console.log(e.message);
-    }
-  };
-
-  console.log("did i set location", location);
+  const defaultBackground = currentWeather?.currentConditions?.cloudcover || 25;
 
   return (
-    <Container>
-      <div class="flex flex-row justify-start flex-wrap content-start">
-        <div class="self-center justify-self-end">
-          <form onSubmit={submit}>
-            {/* <Hint>
-            {" "} */}
-            <div>
-              <TextField
-                id="outlined-basic"
-                variant="outlined"
-                label="Search location"
-                value={searchText}
-                inputProps={{
-                  autoComplete: "off",
-                }}
-                onChange={(e) => {
-                  setSearchText(e.target.value);
-                  if (e.target.value !== searchText) {
-                    resolvedAddress(e.target.value);
-                  }
-                }}
-              />
-              {!!suggestions.length && (
-                <ul
-                  style={{
-                    position: "absolute",
-                    border: ".5px solid gray",
-                    backgroundColor: "white",
-                  }}>
-                  {suggestions.map((s) => (
-                    <li
-                      onClick={() => {
-                        setSearchText(`${s.city} - ${s.country}`);
-                        setLocation(`${s.city} ${s.country}`);
-                        setSuggestions([]);
-                        setLat(null);
-                      }}
-                      style={{
-                        width: "233px",
-                        border: ".5px solid gray",
-                        padding: 10,
-                      }}>
-                      {s.city} - {s.country}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-            {/* </Hint> */}
-            {/* <button type="submit">Find location</button> */}
-          </form>
-        </div>
-        <div class="flex justify-evenly">
-          <CurrentWeather location={location} lat={lat} lng={lng} />
-          <WeatherDetails location={location} lat={lat} lng={lng} />
-        </div>
+    <Container cloudcover={defaultBackground}>
+      <SideBar class="sidebar" />
+      <div class="main-home">
+        <CurrentWeather
+          status={status}
+          location={location}
+          lat={lat}
+          lng={lng}
+        />
+        <WeatherDetails location={location} lat={lat} lng={lng} />
         <HourlyForecast location={location} lat={lat} lng={lng} />
         <DailyForecast location={location} lat={lat} lng={lng} />
         <AirQuality location={location} lat={lat} lng={lng} />
         <UVIndex location={location} lat={lat} lng={lng} />
-        {/* <SuggestionBox tempmin={dailyForecast[0].tempmin} /> */}
-        {/* <CircularProgress />   */}
+        <SuggestionBox
+          location={location}
+          lat={lat}
+          lng={lng}
+          tempmin={dailyForecast[0]?.tempmin}
+          tempmax={dailyForecast[0]?.tempmax}
+          precipprob={dailyForecast[0]?.precipprob}
+          cloudcover={dailyForecast[0]?.cloudcover}
+          uvindex={dailyForecast[0]?.uvindex}
+          aqi={airQuality[0]?.main.aqi}
+        />
+        <RainChance />
       </div>
     </Container>
   );
 };
 
+const backgrounds = {
+  clear: { color: "white", image: "akssdnkajdn" },
+  rainy: { color: "white", image: "akssdnkajdn" },
+  storm: { color: "white", image: "akssdnkajdn" },
+};
+
 const Container = styled.div`
-  margin: 20px;
+  display: grid;
+  grid-template-columns: 18% 82%;
+  height: 100vh;
+  background-size: cover;
+  background-image: ${(p) =>
+    p.cloudcover < 30
+      ? 'url("https://media.istockphoto.com/photos/clouds-in-the-blue-sky-picture-id1004682020?b=1&k=20&m=1004682020&s=170667a&w=0&h=yzFhdZpT7yskA7_u1hbPUyDAk6LXZINZcIz9LewWhcM=")'
+      : p.cloudcover >= 30 && p.cloudcover < 70
+      ? 'url("https://images.unsplash.com/photo-1595865749889-b37a43c4eba4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Ymx1ZSUyMHNreSUyMHdpdGglMjBjbG91ZHxlbnwwfHwwfHw%3D&w=1000&q=80")'
+      : p.cloudcover >= 70
+      ? 'url("https://t3.ftcdn.net/jpg/00/80/55/92/360_F_80559268_H42majL6q9ARVVL0gW5Wo6I2fwoOHt3P.jpg")'
+      : 'url("https://media.istockphoto.com/photos/clouds-in-the-blue-sky-picture-id1004682020?b=1&k=20&m=1004682020&s=170667a&w=0&h=yzFhdZpT7yskA7_u1hbPUyDAk6LXZINZcIz9LewWhcM=")'};
 `;

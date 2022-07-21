@@ -14,13 +14,14 @@ import { geoCodeApiKey } from "../../config/constants";
 import { ariaHidden } from "@mui/base";
 import { airQualityApiKey } from "../../config/constants";
 import { dispatch } from "d3";
+import moment from "moment";
 
 export const fetchCurrentWeather = (lat, lng) => async (dispatch, getState) => {
   try {
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, "0");
-    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-    var yyyy = today.getFullYear();
+    let today = new Date();
+    const dd = String(today.getDate()).padStart(2, "0");
+    const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    const yyyy = today.getFullYear();
 
     today = `${yyyy}-${mm}-${dd}`;
     // lat , lng
@@ -66,15 +67,20 @@ export const searchForLocation = (location) => async (dispatch, getState) => {
 
 export const fetchHourlyForecast = (lat, lng) => async (dispatch, getState) => {
   try {
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, "0");
-    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-    var yyyy = today.getFullYear();
+    let today = new Date();
+    const dd = String(today.getDate()).padStart(2, "0");
+    const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    const yyyy = today.getFullYear();
 
     today = `${yyyy}-${mm}-${dd}`;
+
+    // let tomorrow = new Date(today.getTime() + 86400000);
+    // moment(tomorrow).format("YYYY-MM-DD");
+    // console.log(tomorrow, "tomorrow");
+
     // lat , lng
     const query = `${weatherApiUrl}/${lat},${lng}/${today}?iconSet=icons1&unitGroup=metric&include=hours&ggregateHours=24&key=${weatherApiKey}`;
-    console.log("api query", query);
+    console.log("HOURLY query", query);
     const response = await axios.get(query);
     const hourlyForecast = response.data.days;
     dispatch(hourlyForecastFetched(hourlyForecast));
@@ -85,15 +91,15 @@ export const fetchHourlyForecast = (lat, lng) => async (dispatch, getState) => {
 
 export const fetchDailyForecast = (lat, lng) => async (dispatch, getState) => {
   try {
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, "0");
-    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-    var yyyy = today.getFullYear();
+    let today = new Date();
+    const dd = String(today.getDate()).padStart(2, "0");
+    const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    const yyyy = today.getFullYear();
 
     today = `${yyyy}-${mm}-${dd}`;
     // lat , lng
     const query = `${weatherApiUrl}/${lat},${lng}?next7days?iconSet=icons1&unitGroup=metric&include=days&key=${weatherApiKey}`;
-    console.log("api query", query);
+    // console.log("api query", query);
     const response = await axios.get(query);
     const dailyForecast = response.data.days;
     console.log("daily weather", dailyForecast);
@@ -120,10 +126,10 @@ export const fetchWeatherByLocation =
   (location) => async (dispatch, getState) => {
     try {
       console.log("location", location);
-      var today = new Date();
-      var dd = String(today.getDate()).padStart(2, "0");
-      var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-      var yyyy = today.getFullYear();
+      let today = new Date();
+      const dd = String(today.getDate()).padStart(2, "0");
+      const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+      const yyyy = today.getFullYear();
 
       const parsedDate = `${yyyy}-${mm}-${dd}`;
       const query = `${weatherApiUrl}/${location}/${parsedDate}?iconSet=icons1&unitGroup=metric&ggregateHours=24&key=${weatherApiKey}`;
@@ -139,15 +145,15 @@ export const fetchWeatherByLocation =
 export const hourlyForecastByLocation =
   (location) => async (dispatch, getState) => {
     try {
-      var today = new Date();
-      var dd = String(today.getDate()).padStart(2, "0");
-      var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-      var yyyy = today.getFullYear();
+      let today = new Date();
+      const dd = String(today.getDate()).padStart(2, "0");
+      const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+      const yyyy = today.getFullYear();
 
       today = `${yyyy}-${mm}-${dd}`;
       // lat , lng
       const query = `${weatherApiUrl}/${location}/${today}?iconSet=icons1&unitGroup=metric&include=hours&ggregateHours=24&key=${weatherApiKey}`;
-      console.log("api query", query);
+      // console.log("api query", query);
       const response = await axios.get(query);
       console.log(response, "forecast response hourly");
       const hourlyForecast = response.data.days;
@@ -160,15 +166,15 @@ export const hourlyForecastByLocation =
 export const dailyForecastByLocation =
   (location) => async (dispatch, getState) => {
     try {
-      var today = new Date();
-      var dd = String(today.getDate()).padStart(2, "0");
-      var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-      var yyyy = today.getFullYear();
+      let today = new Date();
+      const dd = String(today.getDate()).padStart(2, "0");
+      const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+      const yyyy = today.getFullYear();
 
       today = `${yyyy}-${mm}-${dd}`;
       // lat , lng
       const query = `${weatherApiUrl}/${location}?iconSet=icons1&unitGroup=metric&include=days&key=${weatherApiKey}`;
-      console.log("daily forecast api query", query);
+      // console.log("daily forecast api query", query);
       const response = await axios.get(query);
       const dailyForecast = response.data.days;
       console.log(response, "forecast response daily");
@@ -177,3 +183,16 @@ export const dailyForecastByLocation =
       console.log(e.message);
     }
   };
+
+// export const fetchFavouriteWeather = (favourite) => {
+//   try {
+//     const today = new Date();
+//     const dd = String(today.getDate()).padStart(2, "0");
+//     const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+//     const yyyy = today.getFullYear();
+
+//     today = `${yyyy}-${mm}-${dd}`;
+//   } catch (e) {
+//     console.log(e.message);
+//   }
+// };

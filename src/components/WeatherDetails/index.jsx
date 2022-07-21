@@ -30,22 +30,50 @@ const WeatherDetails = (props) => {
   //   if (!currentLocation) return <p>Loading...</p>;
 
   return (
-    <div class="flex flex-row justify-between rounded-xl box-border p-4 border-2 my-4 box-shadow-lg shadow-black">
+    <div class="weather-details">
       <div>
         {currentWeather && currentWeather.currentConditions && (
-          <ul>
-            <li>Temperature </li>
-            <li>Feels like </li>
-            <li>Wind </li>
-            <li>Humidity </li>
-            <li>Precipitation </li>
-            <li>UV Index </li>
-            <li>Cloud Cover </li>
-            <li>Visibility </li>
+          <ul class="details-list">
+            <li>
+              Temperature <span>{currentWeather.currentConditions.temp}°</span>
+            </li>
+            <li>
+              Feels like
+              <span>{currentWeather.currentConditions.feelslike}°</span>
+            </li>
+            <li>
+              Wind<span>{currentWeather.currentConditions.windspeed} km/h</span>
+            </li>
+            <li>
+              Humidity <span>{currentWeather.currentConditions.humidity}%</span>
+            </li>
+            <li>
+              Precipitation
+              <span>{currentWeather.currentConditions.precip} mm</span>
+            </li>
+            <li>
+              UV Index <span>{currentWeather.currentConditions.uvindex}</span>
+            </li>
+            <li>
+              Cloud Cover
+              <span>{currentWeather.currentConditions.cloudcover}%</span>
+            </li>
+            <li>
+              Visibility
+              <span>{currentWeather.currentConditions.visibility} km</span>
+            </li>
+            <li>
+              Sunrise
+              <span>{currentWeather.currentConditions.sunrise}</span>
+            </li>
+            <li>
+              Sunset
+              <span>{currentWeather.currentConditions.sunset}</span>
+            </li>
           </ul>
         )}
       </div>
-      <div>
+      {/* <div>
         {currentWeather && currentWeather.currentConditions && (
           <ul class="text-right">
             <li>{currentWeather.currentConditions.temp}°</li>
@@ -58,7 +86,7 @@ const WeatherDetails = (props) => {
             <li>{currentWeather.currentConditions.visibility} km</li>
           </ul>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };

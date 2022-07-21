@@ -33,7 +33,7 @@ export const weatherSlice = createSlice({
     },
     searchLocation: (state, action) => {
       console.log("search location", action);
-      state.searchedLocation = { ...action.payload };
+      state.searchedLocation = action.payload;
     },
   },
 });

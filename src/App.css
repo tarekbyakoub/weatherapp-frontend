@@ -1,3 +1,290 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.overlord {
+  height: 100vh;
+}
+
+.frame-clear {
+  display: grid;
+  grid-template-columns: 18% 82%;
+  /* grid-template-rows: repeat(5, 200px);
+  grid-template-columns: repeat(5, 1fr); */
+  height: 100vh;
+  background-size: cover;
+  background-image: url("https://media.istockphoto.com/photos/clouds-in-the-blue-sky-picture-id1004682020?b=1&k=20&m=1004682020&s=170667a&w=0&h=yzFhdZpT7yskA7_u1hbPUyDAk6LXZINZcIz9LewWhcM=");
+}
+
+.frame-light-clouds {
+  display: grid;
+  grid-template-columns: 18% 82%;
+  /* grid-template-rows: repeat(5, 200px);
+  grid-template-columns: repeat(5, 1fr); */
+  height: 100vh;
+  background-size: cover;
+  background-image: url("https://images.unsplash.com/photo-1595865749889-b37a43c4eba4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Ymx1ZSUyMHNreSUyMHdpdGglMjBjbG91ZHxlbnwwfHwwfHw%3D&w=1000&q=80");
+}
+
+.frame-overcast {
+  display: grid;
+  grid-template-columns: 18% 82%;
+  /* grid-template-rows: repeat(5, 200px);
+  grid-template-columns: repeat(5, 1fr); */
+  height: 100vh;
+  background-size: cover;
+  background-image: url("https://t3.ftcdn.net/jpg/00/80/55/92/360_F_80559268_H42majL6q9ARVVL0gW5Wo6I2fwoOHt3P.jpg");
+}
+
+.main-home {
+  display: grid;
+
+  grid-template-rows: repeat(4, 25%);
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-areas:
+    "current current details details suggest suggest"
+    "hourly hourly hourly hourly hourly hourly"
+    "daily daily daily daily daily daily"
+    "uv uv aqi aqi rain rain";
+}
+
+.main-fav {
+  display: grid;
+  grid-template-rows: repeat(5, 25%);
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.current {
+  grid-area: current;
+  border-radius: 25px;
+  border: 3px solid #ddd;
+  padding: 1rem;
+  margin: 1rem;
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
+    rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+}
+
+.current-location {
+  padding-bottom: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: large;
+  font-weight: 400;
+}
+
+.current-location-head {
+  position: relative;
+  font-size: x-large;
+}
+
+.current-details {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.current-image {
+  width: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  align-items: center;
+}
+
+.current-description {
+  width: 180px;
+}
+.location-fav {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.weather-details {
+  grid-area: details;
+  border-radius: 25px;
+  border: 3px solid #ddd;
+  padding: 1rem;
+  margin: 1rem;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
+    rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+  background: rgba(255, 255, 255, 0.6);
+  font-size: medium;
+  overflow-y: scroll;
+}
+
+.details-list > li > span {
+  float: right;
+}
+
+.hourly {
+  grid-area: hourly;
+  display: flex;
+  overflow: auto;
+
+  border-radius: 25px;
+  border: 3px solid #ddd;
+  padding: 1rem;
+  margin: 1rem;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
+    rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+  background: rgba(255, 255, 255, 0.6);
+  font-size: large;
+}
+
+/* .hourly::-webkit-scrollbar {
+  display: none;
+} */
+
+.hourly-row {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+}
+
+.hourly-row-item {
+  width: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  justify-items: center;
+  align-items: center;
+  align-content: center;
+  height: 100%;
+}
+
+.hourly-row-item > img {
+  width: 50px;
+  height: 50px;
+}
+
+.daily {
+  grid-area: daily;
+  display: flex;
+  overflow: auto;
+  border-radius: 25px;
+  border: 3px solid #ddd;
+  padding: 0.5rem;
+  margin: 1rem;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
+    rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+  background: rgba(255, 255, 255, 0.6);
+  font-size: large;
+}
+
+/* .hourly::-webkit-scrollbar {
+  display: none;
+} */
+
+.daily-row {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-wrap: nowrap;
+}
+
+.daily-row-item {
+  width: 87px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  justify-items: space-between;
+  align-items: center;
+  align-content: center;
+  height: 100%;
+}
+.daily-row-item > img {
+  width: 90px;
+  height: 90px;
+}
+
+.aqi {
+  grid-area: aqi;
+  border-radius: 25px;
+  border: 3px solid #ddd;
+  padding: 1rem;
+  margin: 1rem;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
+    rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.uv {
+  grid-area: uv;
+  border-radius: 25px;
+  border: 3px solid #ddd;
+  padding: 1rem;
+  margin: 1rem;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
+    rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.suggest {
+  grid-area: suggest;
+  border-radius: 25px;
+  border: 3px solid #ddd;
+  padding: 1rem;
+  margin: 1rem;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
+    rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.rain {
+  grid-area: rain;
+  border-radius: 25px;
+  border: 3px solid #ddd;
+  padding: 1rem;
+  margin: 1rem;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
+    rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.fav-wrapper {
+  display: flex;
+  width: 90vw;
+  flex-wrap: wrap;
+}
+
+.search-box {
+}
+
+.search-box-container {
+  width: 100%;
+}
+
+.sidebar {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(156, 156, 156);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(188, 188, 188);
+}
