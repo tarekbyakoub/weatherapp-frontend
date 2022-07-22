@@ -77,7 +77,7 @@ const CurrentWeather = (props) => {
   // const currentWeatherDisplay = currentWeather.currentConditions
   //   ? currentWeather.currentConditions
   //   : currentWeather.days[0];
-
+  console.log(favourites, "favourites here");
   return (
     <div class="current">
       {!location ? (
@@ -108,20 +108,31 @@ const CurrentWeather = (props) => {
       ) : currentWeather.resolvedAddress ? (
         <div class="current-location-head">
           {currentWeather.resolvedAddress.split(",")[0]}{" "}
-          <button
-            class="location-fav"
-            onClick={() => {
-              dispatch(
-                addUserFavourites(
-                  currentWeather.resolvedAddress,
-                  currentWeather.resolvedAddress.split(",")[0],
-                  token
-                )
-              );
-              dispatch(fetchUserFavourites(user.data));
-            }}>
-            <AiOutlineStar class="fav-button" />
-          </button>
+          {location ? (
+            <button
+              class="location-fav"
+              onClick={() => {
+                dispatch(
+                  addUserFavourites(
+                    currentWeather.resolvedAddress,
+                    currentWeather.resolvedAddress.split(",")[0],
+                    token
+                  )
+                );
+                dispatch(fetchUserFavourites(user.data));
+              }}>
+              {favourites &&
+              favourites.find(
+                (f) => f.resolvedAddress === currentWeather.resolvedAddress
+              ) ? (
+                <AiFillStar class="fav-button" />
+              ) : (
+                <AiOutlineStar class="fav-button" />
+              )}
+            </button>
+          ) : (
+            <div></div>
+          )}
         </div>
       ) : (
         <p>Loading</p>

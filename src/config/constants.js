@@ -1,4 +1,5 @@
-export const apiUrl = process.env.API_URL || "http://localhost:4001";
+export const apiUrl =
+  process.env.API_URL || "https://weather-app-lic-ation.herokuapp.com";
 export const DEFAULT_MESSAGE_TIMEOUT = 2000;
 export const weatherApiUrl =
   "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline";

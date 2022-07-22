@@ -65,7 +65,7 @@ const HourlyForecast = (props) => {
                   />
                   <div class="text-center">
                     <p class="p-1">{parseInt(hour.temp)}°</p>
-                    <p>{moment(hour.datetimeEpoch).format("HH")}h</p>
+                    <p>{parseInt(hour.datetime)}h</p>
                   </div>
                 </div>
               );

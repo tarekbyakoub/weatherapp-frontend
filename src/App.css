@@ -129,7 +129,9 @@
 .details-list > li > span {
   float: right;
 }
-
+.fav-button {
+  color: black;
+}
 .hourly {
   grid-area: hourly;
   display: flex;
