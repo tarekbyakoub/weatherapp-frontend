@@ -80,6 +80,7 @@ const SideBar = (props) => {
     <div class="sidebar-container" aria-label="Sidebar">
       <div class="sidebar h-full py-4 px-3 bg-gray-200 rounded dark:bg-gray-800">
         <span class="text-2xl font-bold">Weather</span>
+        <span class="text-m">or not</span>
         <br />
         <br />
         <div class="self-center justify-self-end py-3">
@@ -132,8 +133,8 @@ const SideBar = (props) => {
         </div>
         <ul class="space-y-2">
           <li>
-            <a
-              href="/"
+            <Link
+              to="/"
               class="flex flex-items p-2 text-base font-normal rounded-lg dark:text-white hover:bg-gray-300 dark:hover:bg-gray-700">
               <svg
                 class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -144,7 +145,7 @@ const SideBar = (props) => {
                 <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
               </svg>
               <span class="ml-3">Dashboard</span>
-            </a>
+            </Link>
           </li>
 
           <li>
