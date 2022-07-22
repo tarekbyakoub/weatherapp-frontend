@@ -120,7 +120,7 @@ export const fetchDailyForecast = (lat, lng) => async (dispatch, getState) => {
 export const fetchAirQuality = (lat, lng) => async (dispatch, getState) => {
   try {
     console.log("hello is this running?");
-    const query = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lng}&appid=${airQualityApiKey}`;
+    const query = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lng}&appid=${airQualityApiKey}`;
     console.log("api query", query);
     const response = await axios.get(query);
     const airQuality = response.data.list;
