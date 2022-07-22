@@ -24,14 +24,14 @@ const AirQuality = (props) => {
 
   const getCoords = async (location) => {
     try {
-      console.log("location to search", location);
+      // console.log("location to search", location);
       const response = await axios.get(
         `https://api.geoapify.com/v1/geocode/autocomplete?text=${location}&apiKey=${geoCodeApiKey}`
       );
-      console.log("Coordinate response", response);
+      // console.log("Coordinate response", response);
       const locationCoordinates = response.data.features[0];
 
-      console.log("location coordinates", locationCoordinates);
+      // console.log("location coordinates", locationCoordinates);
       if (locationCoordinates) {
         dispatch(
           fetchAirQuality(

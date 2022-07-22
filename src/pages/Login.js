@@ -39,12 +39,14 @@ export const Login = () => {
               placeholder="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              style={{ width: "30%" }}
             />
             <Input
               type="password"
               placeholder="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              style={{ width: "30%" }}
             />
             <br />
             <Button type="submit">Login</Button>

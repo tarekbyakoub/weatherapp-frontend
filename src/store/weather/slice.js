@@ -7,6 +7,7 @@ const initialState = {
   currentLocation: {},
   airQuality: [],
   searchedLocation: null,
+  favouriteLocation: null,
 };
 
 export const weatherSlice = createSlice({
@@ -35,6 +36,10 @@ export const weatherSlice = createSlice({
       console.log("search location", action);
       state.searchedLocation = action.payload;
     },
+    favouriteLocationFetched: (state, action) => {
+      console.log(action.payload, "favourite location");
+      state.favouriteLocation = action.payload;
+    },
   },
 });
 
@@ -45,6 +50,7 @@ export const {
   dailyForecastFetched,
   airQualityFetched,
   searchLocation,
+  favouriteLocationFetched,
 } = weatherSlice.actions;
 
 export default weatherSlice.reducer;

@@ -26,6 +26,7 @@ import {
 } from "../../store/user/selectors";
 
 const CurrentWeather = (props) => {
+  console.log("RENDERING CURRENT WEATHER");
   const dispatch = useDispatch();
   const currentWeather = useSelector(selectCurrentConditions);
   const currentLocation = useSelector(selectCurrentLocation);
@@ -35,21 +36,31 @@ const CurrentWeather = (props) => {
   const token = useSelector(selectToken);
   const favourites = useSelector(selectFavourites);
   const user = useSelector(selectUser);
-
   useEffect(() => {
+    console.log("Im HERE");
     if (location) {
-      // console.log("This is the location received", location);
+      console.log("HELLO WORLD");
       dispatch(fetchWeatherByLocation(location));
-    } else {
-      if (lat) {
-        dispatch(fetchCurrentWeather(lat, lng));
-        dispatch(fetchResolvedLocation(lat, lng));
-      }
+    } else if (lat) {
+      console.log("oh no");
+      dispatch(fetchCurrentWeather(lat, lng));
+      dispatch(fetchResolvedLocation(lat, lng));
     }
   }, [dispatch, lng, lat, location]);
+  // useEffect(() => {
+  //   if (location) {
+  //     console.log("This is the location received", location.location);
+  //     dispatch(fetchWeatherByLocation(location.location));
+  //   } else {
+  //     if (lat) {
+  //       dispatch(fetchCurrentWeather(lat, lng));
+  //       dispatch(fetchResolvedLocation(lat, lng));
+  //     }
+  //   }
+  // }, [dispatch, lng, lat, location]);
 
   useEffect(() => {
-    console.log("TOKEN IS", token);
+    // console.log("TOKEN IS", token);
   }, [token]);
 
   useEffect(() => {
@@ -58,7 +69,7 @@ const CurrentWeather = (props) => {
     }
   }, [dispatch, user]);
 
-  console.log("This is the current weather object", currentWeather);
+  // console.log("This is the current weather object", currentWeather);
   //   if (!currentLocation) return <p>Loading...</p>;
 
   // const displayName = currentLocation.resolvedAddress.split(",");
@@ -94,7 +105,7 @@ const CurrentWeather = (props) => {
             </div>
           )}
         </div>
-      ) : (
+      ) : currentWeather.resolvedAddress ? (
         <div class="current-location-head">
           {currentWeather.resolvedAddress.split(",")[0]}{" "}
           <button
@@ -112,6 +123,8 @@ const CurrentWeather = (props) => {
             <AiOutlineStar class="fav-button" />
           </button>
         </div>
+      ) : (
+        <p>Loading</p>
       )}
       {currentWeather && currentWeather.currentConditions ? (
         <div class="current-details">

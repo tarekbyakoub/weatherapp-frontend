@@ -9,11 +9,11 @@ import {
   hourlyForecastFetched,
   dailyForecastFetched,
   airQualityFetched,
+  favouriteLocationFetched,
 } from "./slice";
 import { geoCodeApiKey } from "../../config/constants";
 import { ariaHidden } from "@mui/base";
 import { airQualityApiKey } from "../../config/constants";
-import { dispatch } from "d3";
 import moment from "moment";
 
 export const fetchCurrentWeather = (lat, lng) => async (dispatch, getState) => {
@@ -67,23 +67,31 @@ export const searchForLocation = (location) => async (dispatch, getState) => {
 
 export const fetchHourlyForecast = (lat, lng) => async (dispatch, getState) => {
   try {
-    let today = new Date();
-    const dd = String(today.getDate()).padStart(2, "0");
-    const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-    const yyyy = today.getFullYear();
+    console.log("HELLO!");
+    const now = moment();
+    const today = now.format("YYYY-MM-DD");
+    const tomorrow = now.add(1, "day").format("YYYY-MM-DD");
+    console.log("today tomorrow", today, tomorrow);
 
-    today = `${yyyy}-${mm}-${dd}`;
-
-    // let tomorrow = new Date(today.getTime() + 86400000);
-    // moment(tomorrow).format("YYYY-MM-DD");
-    // console.log(tomorrow, "tomorrow");
-
-    // lat , lng
-    const query = `${weatherApiUrl}/${lat},${lng}/${today}?iconSet=icons1&unitGroup=metric&include=hours&ggregateHours=24&key=${weatherApiKey}`;
-    console.log("HOURLY query", query);
+    const query = `${weatherApiUrl}/${lat},${lng}/${today}/${tomorrow}?iconSet=icons1&unitGroup=metric&include=hours&ggregateHours=24&key=${weatherApiKey}`;
+    // console.log("HOURLY query", query);
     const response = await axios.get(query);
     const hourlyForecast = response.data.days;
-    dispatch(hourlyForecastFetched(hourlyForecast));
+
+    console.log("WHAT IS HOURLY", hourlyForecast);
+
+    const todaysForecast = hourlyForecast[0];
+
+    const cleanToday = {
+      ...todaysForecast,
+      hours: todaysForecast.hours.filter(
+        (h) => h.datetime > moment().format("HH:mm:ss")
+      ),
+    };
+    console.log("CLEAN TODAY", cleanToday);
+    const cleanForecast = [cleanToday, hourlyForecast[1]];
+    console.log(cleanForecast, "cleanForecast");
+    dispatch(hourlyForecastFetched(cleanForecast));
   } catch (e) {
     console.log(e.message);
   }
@@ -145,19 +153,31 @@ export const fetchWeatherByLocation =
 export const hourlyForecastByLocation =
   (location) => async (dispatch, getState) => {
     try {
-      let today = new Date();
-      const dd = String(today.getDate()).padStart(2, "0");
-      const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-      const yyyy = today.getFullYear();
-
-      today = `${yyyy}-${mm}-${dd}`;
+      const now = moment();
+      const today = now.format("YYYY-MM-DD");
+      const tomorrow = now.add(1, "day").format("YYYY-MM-DD");
+      console.log("today tomorrow", today, tomorrow);
       // lat , lng
-      const query = `${weatherApiUrl}/${location}/${today}?iconSet=icons1&unitGroup=metric&include=hours&ggregateHours=24&key=${weatherApiKey}`;
+      const query = `${weatherApiUrl}/${location}/${today}/${tomorrow}?iconSet=icons1&unitGroup=metric&include=hours&ggregateHours=24&key=${weatherApiKey}`;
       // console.log("api query", query);
       const response = await axios.get(query);
       console.log(response, "forecast response hourly");
       const hourlyForecast = response.data.days;
-      dispatch(hourlyForecastFetched(hourlyForecast));
+      const todaysForecast = hourlyForecast[0];
+      const cleanToday = {
+        ...todaysForecast,
+        hours: todaysForecast.hours.filter(
+          (h) => h.datetime > moment().format("HH:mm:ss")
+        ),
+      };
+
+      console.log("CLEAN TODAY", cleanToday);
+
+      const cleanForecast = [cleanToday, hourlyForecast[1]];
+
+      console.log(cleanForecast, "cleanForecast");
+
+      dispatch(hourlyForecastFetched(cleanForecast));
     } catch (e) {
       console.log(e.message);
     }
@@ -184,15 +204,30 @@ export const dailyForecastByLocation =
     }
   };
 
-// export const fetchFavouriteWeather = (favourite) => {
-//   try {
-//     const today = new Date();
-//     const dd = String(today.getDate()).padStart(2, "0");
-//     const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-//     const yyyy = today.getFullYear();
+export const fetchFavouriteWeather = (favourite) => {
+  try {
+    let today = new Date();
+    const dd = String(today.getDate()).padStart(2, "0");
+    const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    const yyyy = today.getFullYear();
 
-//     today = `${yyyy}-${mm}-${dd}`;
-//   } catch (e) {
-//     console.log(e.message);
-//   }
-// };
+    today = `${yyyy}-${mm}-${dd}`;
+  } catch (e) {
+    console.log(e.message);
+  }
+};
+
+export const fetchFavouriteLocation =
+  (location) => async (dispatch, getState) => {
+    try {
+      console.log(location, "here");
+      const response = await axios.get(
+        `https://api.geoapify.com/v1/geocode/autocomplete?text=${location}&apiKey=${geoCodeApiKey}`
+      );
+      const favouriteLocation = response.data;
+      console.log("favouriteLocation", favouriteLocation);
+      dispatch(favouriteLocationFetched(favouriteLocation));
+    } catch (e) {
+      console.log(e.message);
+    }
+  };

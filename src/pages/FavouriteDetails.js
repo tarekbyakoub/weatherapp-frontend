@@ -1,5 +1,5 @@
 import { Title } from "../styled";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { LinkWord } from "../styled";
 import axios from "axios";
 import styled from "styled-components";
@@ -14,7 +14,6 @@ import CircularProgress from "../components/CircularProgressBar";
 import { UVIndex } from "../components/UVIndex";
 import { FilledInput, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-import { fetchWeatherByLocation } from "../store/weather/thunks";
 import { SuggestionBox } from "../components/SuggestionBox";
 import {
   selectAirQuality,
@@ -22,24 +21,30 @@ import {
   selectDailyForecast,
   selectSearchedLocation,
 } from "../store/weather/selectors";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { SideBar } from "../components/SideBar";
 import "../App.css";
 import { RainChance } from "../components/RainChance";
-import moment from "moment";
+import { favouriteLocationFetched } from "../store/weather/slice";
+import { useSearchParams } from "react-router-dom";
 
-export const Homepage = () => {
-  const location = useSelector(selectSearchedLocation);
+const FavouriteDetails = () => {
+  //   const location = useSelector(selectSearchedLocation);
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
   const [status, setStatus] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
   // const favLocation = useSelector(selectFavLocation)
-
+  const dispatch = useDispatch();
   const dailyForecast = useSelector(selectDailyForecast);
   const airQuality = useSelector(selectAirQuality);
   const currentWeather = useSelector(selectCurrentConditions);
 
-  // console.log("Current Weather Homepage", currentWeather);
+  const location = useParams().location;
+
+  console.log("do i have location??", location);
+
+  //   console.log("Current Weather Homepage", currentWeather);
 
   const getLocation = () => {
     if (!navigator.geolocation) {
@@ -64,11 +69,16 @@ export const Homepage = () => {
     getLocation();
   }, []);
 
+  useEffect(() => {
+    // console.log(location, "location changed");
+    dispatch(favouriteLocationFetched(location));
+  }, [location, dispatch]);
+
   // useEffect(() => {
   //   console.log(location, "location changed");
   // }, [location]);
 
-  // console.log("dailyForecast homepage", dailyForecast[0]);
+  //   console.log("dailyForecast homepage", dailyForecast[0]);
 
   // if (
   //   currentWeather &&
@@ -83,20 +93,11 @@ export const Homepage = () => {
     rainy: "grey",
     storm: "black",
   };
-  const defaultSunrise =
-    currentWeather?.currentConditions?.sunriseEpoch || moment("06:00:00");
-  const defaultSunset =
-    currentWeather?.currentConditions?.sunsetEpoch || moment("20:00:00");
+
   const defaultBackground = currentWeather?.currentConditions?.cloudcover || 25;
-  const defaultTime =
-    currentWeather?.currentConditions?.datetimeEpoch || moment("12:00:00");
-  console.log("sunrise equation", typeof defaultTime, typeof defaultSunset);
+
   return (
-    <Container
-      cloudcover={defaultBackground}
-      time={defaultTime}
-      sunset={defaultSunset}
-      sunrise={defaultSunrise}>
+    <Container cloudcover={defaultBackground}>
       <SideBar class="sidebar" />
       <div class="main-home">
         <CurrentWeather
@@ -139,11 +140,14 @@ const Container = styled.div`
   height: 100%;
   background-size: cover;
   background-image: ${(p) =>
-    p.cloudcover < 30 && p.time > p.sunset
+    p.cloudcover < 30 && p.time > p.sunset && p.time < p.sunrise
       ? 'url("https://ak.picdn.net/shutterstock/videos/1030638806/thumb/1.jpg")'
-      : p.cloudcover >= 30 && p.cloudcover < 70 && p.time > p.sunset
+      : p.cloudcover >= 30 &&
+        p.cloudcover < 70 &&
+        p.time > p.sunset &&
+        p.time < p.sunrise
       ? 'url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0yRJOrVfP_9V1LM23U46-57fgO8M-rWr2Xw&usqp=CAU")'
-      : p.cloudcover >= 70 && p.time > p.sunset
+      : p.cloudcover >= 70 && p.time > p.sunset && p.time < p.sunrise
       ? 'url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXC9JLyr4PuRt3sT1HNoGcJhENzdwLUnLwFwvv0hTNj2cadsBBQMyA1wHyCK2boSjkLHQ&usqp=CAU")'
       : p.cloudcover < 30
       ? 'url("https://media.istockphoto.com/photos/clouds-in-the-blue-sky-picture-id1004682020?b=1&k=20&m=1004682020&s=170667a&w=0&h=yzFhdZpT7yskA7_u1hbPUyDAk6LXZINZcIz9LewWhcM=")'
@@ -151,11 +155,7 @@ const Container = styled.div`
       ? 'url("https://images.unsplash.com/photo-1595865749889-b37a43c4eba4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Ymx1ZSUyMHNreSUyMHdpdGglMjBjbG91ZHxlbnwwfHwwfHw%3D&w=1000&q=80")'
       : p.cloudcover >= 70
       ? 'url("https://t3.ftcdn.net/jpg/00/80/55/92/360_F_80559268_H42majL6q9ARVVL0gW5Wo6I2fwoOHt3P.jpg")'
-      : p.cloudcover < 30 && p.time > p.sunset
-      ? 'url("https://ak.picdn.net/shutterstock/videos/1030638806/thumb/1.jpg")'
-      : p.cloudcover >= 30 && p.cloudcover < 70 && p.time > p.sunset
-      ? 'url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0yRJOrVfP_9V1LM23U46-57fgO8M-rWr2Xw&usqp=CAU")'
-      : p.cloudcover >= 70 && p.time > p.sunset
-      ? 'url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXC9JLyr4PuRt3sT1HNoGcJhENzdwLUnLwFwvv0hTNj2cadsBBQMyA1wHyCK2boSjkLHQ&usqp=CAU")'
       : 'url("https://media.istockphoto.com/photos/clouds-in-the-blue-sky-picture-id1004682020?b=1&k=20&m=1004682020&s=170667a&w=0&h=yzFhdZpT7yskA7_u1hbPUyDAk6LXZINZcIz9LewWhcM=")'};
 `;
+
+export { FavouriteDetails };

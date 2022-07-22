@@ -10,7 +10,7 @@ const FavoriteCard = ({ fave }) => {
       const dd = String(today.getDate()).padStart(2, "0");
       const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
       const yyyy = today.getFullYear();
-      console.log(fave, "FAVE HERE");
+      // console.log(fave, "FAVE HERE");
       today = `${yyyy}-${mm}-${dd}`;
       const weatherResponse = await axios.get(
         `${weatherApiUrl}/${fave.resolvedAddress}/${today}?iconSet=icons1&unitGroup=metric&ggregateHours=24&key=${weatherApiKey}`

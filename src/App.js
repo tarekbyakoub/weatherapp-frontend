@@ -7,7 +7,7 @@ import { Navigation, MessageBox } from "./components";
 import { Homepage, Login, SignUp, Favourites } from "./pages";
 import { Logout } from "./pages/Logout";
 import styled from "styled-components";
-
+import { FavouriteDetails } from "./pages/FavouriteDetails";
 function App() {
   const dispatch = useDispatch();
 
@@ -25,6 +25,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/favourites" element={<Favourites />} />
+        <Route path="/favourites/:location" element={<FavouriteDetails />} />
       </Routes>
     </div>
   );

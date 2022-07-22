@@ -14,7 +14,7 @@ const SuggestionBox = (props) => {
   const aqi =
     props.aqi >= 4 &&
     "The air in this area is very polluted, stay indoors as much as possible";
-
+  console.log(props.uvindex, "Uv index in suggestbox");
   return (
     <div class="suggest">
       <div>{shorts}</div>

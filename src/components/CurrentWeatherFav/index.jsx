@@ -25,7 +25,10 @@ import {
   selectUser,
 } from "../../store/user/selectors";
 import FavoriteCard from "../FavoriteCard/FavoriteCard";
+import { Link } from "react-router-dom";
+
 const CurrentWeatherFav = (props) => {
+  console.log("RENDERING CURRENT WEATHER FAV");
   const dispatch = useDispatch();
   const currentWeather = useSelector(selectCurrentConditions);
   const currentLocation = useSelector(selectCurrentLocation);
@@ -65,7 +68,12 @@ const CurrentWeatherFav = (props) => {
         {favourites &&
           favourites.length &&
           favourites.map((fave) => {
-            return <FavoriteCard fave={fave} />;
+            return (
+              <Link
+                to={`/favourites/${encodeURIComponent(fave.resolvedAddress)}`}>
+                <FavoriteCard fave={fave} />
+              </Link>
+            );
           })}
       </div>
     </div>
